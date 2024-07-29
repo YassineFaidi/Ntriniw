@@ -6,7 +6,6 @@ import 'package:flutter_frontend/services/authentification/auth_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
 import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
