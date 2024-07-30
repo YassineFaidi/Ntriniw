@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_frontend/components/my_button.dart';
-import 'package:flutter_frontend/components/my_text_field.dart';
-import 'package:flutter_frontend/constants/app_colors.dart';
 import 'package:flutter_frontend/services/authentification/auth_service.dart';
+import 'package:flutter_frontend/components/my_text_field.dart';
+import 'package:flutter_frontend/components/my_button.dart';
+import 'package:flutter_frontend/constants/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
+import 'dart:io';
 
 class RegisterPage extends StatefulWidget {
   final void Function()? onTap;
