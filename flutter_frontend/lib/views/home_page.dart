@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/components/my_button.dart';
 import 'package:flutter_frontend/services/authentification/auth_service.dart';
@@ -11,30 +13,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  void signOut() {
-    final authService = Provider.of<AuthService>(context, listen: false);
-    authService.signOut();
-
-    // Navigator.pushReplacement(
-    //   context,
-    //   PageRouteBuilder(
-    //     pageBuilder: (context, animation, secondaryAnimation) =>
-    //         const AuthGate(page: HomePage()),
-    //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-    //       return FadeTransition(
-    //         opacity: animation,
-    //         child: child,
-    //       );
-    //     },
-    //   ),
-    // );
-  }
-
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+
+    // Check if userCredential is available
+    final user = authService.userCredential;
+
+    ImageProvider? profileImage;
+
+    profileImage = MemoryImage(base64Decode(user!.profileImg));
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Home page"),
+        title: const Text("Home Page"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -42,11 +34,30 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // Display user info
+              if (user != null) ...[
+                CircleAvatar(
+                  backgroundImage: profileImage,
+                  radius: 50.0,
+                ),
+                SizedBox(height: 20),
+                Text('UID: ${user.uid}'),
+                Text('Username: ${user.username}'),
+                Text('Email: ${user.email}'),
+              ] else ...[
+                Text('No user is logged in'),
+              ],
+              SizedBox(height: 20),
               MyButton(onTap: signOut, text: "Sign Out"),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void signOut() {
+    final authService = Provider.of<AuthService>(context, listen: false);
+    authService.signOut();
   }
 }

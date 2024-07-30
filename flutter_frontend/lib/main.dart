@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_frontend/services/authentification/auth_gate.dart';
 import 'package:flutter_frontend/services/authentification/auth_service.dart';
+import 'package:flutter_frontend/services/authentification/auth_gate.dart';
 import 'package:flutter_frontend/utils/shared_prefs_helper.dart';
 import 'package:flutter_frontend/views/get_statred_page.dart';
 import 'package:flutter_frontend/views/home_page.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

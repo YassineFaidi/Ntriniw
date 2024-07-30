@@ -2,6 +2,7 @@ import 'package:flutter_frontend/services/authentification/auth_service.dart';
 import 'package:flutter_frontend/components/my_text_field.dart';
 import 'package:flutter_frontend/components/my_button.dart';
 import 'package:flutter_frontend/constants/app_colors.dart';
+import 'package:flutter_frontend/constants/app_img.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -56,8 +57,6 @@ class _RegisterPageState extends State<RegisterPage> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
-      } else {
-        print('No image selected.');
       }
     });
   }
@@ -99,7 +98,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             shape: BoxShape.circle,
                             image: DecorationImage(
                               image: _image == null
-                                  ? const AssetImage("assets/images/user.jpeg")
+                                  ? const AssetImage(userImg)
                                   : FileImage(_image!),
                               fit: BoxFit.cover,
                             ),

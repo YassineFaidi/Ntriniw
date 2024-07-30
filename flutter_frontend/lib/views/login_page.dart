@@ -2,6 +2,7 @@ import 'package:flutter_frontend/services/authentification/auth_service.dart';
 import 'package:flutter_frontend/components/my_text_field.dart';
 import 'package:flutter_frontend/components/my_button.dart';
 import 'package:flutter_frontend/constants/app_colors.dart';
+import 'package:flutter_frontend/constants/app_img.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -87,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(height: 50),
-                    Image.asset('assets/images/login.png',
+                    Image.asset(loginImg,
                         width: 100, height: 100),
                     const SizedBox(height: 25),
                     Text(

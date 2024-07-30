@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_frontend/components/my_button.dart';
 import 'package:flutter_frontend/controllers/login_or_register.dart';
 import 'package:flutter_frontend/utils/shared_prefs_helper.dart';
+import 'package:flutter_frontend/components/my_button.dart';
+import 'package:flutter_frontend/constants/app_img.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/material.dart';
 
 class GetStarted extends StatelessWidget {
   const GetStarted({super.key});
@@ -29,7 +30,7 @@ class GetStarted extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset("assets/images/start.png"),
+                  Image.asset(startImg),
                   const SizedBox(height: 40),
                   Text(
                     "Start",
