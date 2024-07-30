@@ -6,6 +6,7 @@ import 'package:flutter_frontend/constants/app_img.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'dart:io';
 
@@ -28,26 +29,58 @@ class _RegisterPageState extends State<RegisterPage> {
   Color _textColor = Colors.black;
 
   void signUp() async {
-    if (passwdcontroller.text != confirmPasswdcontroller.text) {
+    if (usernamecontroller.text == '' ||
+        emailcontroller.text == '' ||
+        passwdcontroller.text == '' ||
+        confirmPasswdcontroller.text == '') {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Passwords do not match!")));
-      return;
-    }
-
-    final authService = Provider.of<AuthService>(context, listen: false);
-
-    try {
-      authService.signUpWithEmailandPassword(emailcontroller.text,
-          passwdcontroller.text, usernamecontroller.text, _image);
-    } catch (e) {
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            e.toString(),
-          ),
+        const SnackBar(
+          content: Text('All fields cannot be empty.'),
         ),
       );
+    } else {
+      if (passwdcontroller.text != confirmPasswdcontroller.text) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Passwords do not match!")));
+        return;
+      }
+
+      if (passwdcontroller.text.length < 8) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Password must contain at least 8 characters")));
+        return;
+      }
+
+      final authService = Provider.of<AuthService>(context, listen: false);
+
+      try {
+        await authService.signUpWithEmailandPassword(emailcontroller.text,
+            passwdcontroller.text, usernamecontroller.text, _image);
+      } catch (e) {
+        if (e is SocketException || e is http.ClientException) {
+          // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to communicate with server!'),
+            ),
+          );
+        } else {
+          var message = e.toString();
+          if (e is Exception) {
+            if (message.contains('Email already exist')) {
+              message = 'Email already exist';
+            }
+          }
+          // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                message,
+              ),
+            ),
+          );
+        }
+      }
     }
   }
 

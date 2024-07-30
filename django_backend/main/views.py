@@ -14,7 +14,13 @@ def sign_up_view(request):
             password = data.get('password')
             username = data.get('username')
             image_base64 = data.get('image')
-
+            
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT email FROM users WHERE email = %s", [email])
+                emails = cursor.fetchone()
+                if emails:
+                    return JsonResponse({'success': False, 'error': 'Email already exist'})
+                    
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
             if image_base64:

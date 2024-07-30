@@ -5,14 +5,19 @@ class UserCredential {
   final String profileImg;
 
   UserCredential(
-      {required this.uid, required this.email, required this.username, required this.profileImg});
+      {required this.uid,
+      required this.email,
+      required this.username,
+      required this.profileImg});
 
   factory UserCredential.fromJson(Map<String, dynamic> json) {
+    print("Json");
+    print(json);
     return UserCredential(
       uid: json['uid'],
       username: json['username'],
       email: json['email'],
-      profileImg: json['profileImg'],
+      profileImg: json['profileImg'] ?? '',
     );
   }
 

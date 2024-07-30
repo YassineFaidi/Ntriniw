@@ -1,9 +1,8 @@
-import 'dart:convert';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_frontend/components/my_button.dart';
 import 'package:flutter_frontend/services/authentification/auth_service.dart';
+import 'package:flutter_frontend/controllers/user_img.dart';
+import 'package:flutter_frontend/components/my_button.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,10 +19,6 @@ class _HomePageState extends State<HomePage> {
     // Check if userCredential is available
     final user = authService.userCredential;
 
-    ImageProvider? profileImage;
-
-    profileImage = MemoryImage(base64Decode(user!.profileImg));
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home Page"),
@@ -35,17 +30,15 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Display user info
-              if (user != null) ...[
+              ...[
                 CircleAvatar(
-                  backgroundImage: profileImage,
+                  backgroundImage: UserImg.getuserImg(user!.profileImg),
                   radius: 50.0,
                 ),
                 SizedBox(height: 20),
                 Text('UID: ${user.uid}'),
                 Text('Username: ${user.username}'),
                 Text('Email: ${user.email}'),
-              ] else ...[
-                Text('No user is logged in'),
               ],
               SizedBox(height: 20),
               MyButton(onTap: signOut, text: "Sign Out"),
