@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/components/my_app_bar.dart';
-import 'package:flutter_frontend/components/my_nav_bar.dart';
 
 class ReelsPage extends StatefulWidget {
   const ReelsPage({super.key});
@@ -20,6 +19,6 @@ class _ProfilePageState extends State<ReelsPage> {
             style: TextStyle(fontSize: 24),
           ),
         ),
-        bottomNavigationBar: MyNavBar(selectedIndex: 2));
+        );
   }
 }

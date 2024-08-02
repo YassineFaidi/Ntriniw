@@ -1,8 +1,8 @@
+import 'package:flutter_frontend/views/main_page.dart';
 import 'package:flutter_frontend/services/authentification/auth_service.dart';
 import 'package:flutter_frontend/services/authentification/auth_gate.dart';
 import 'package:flutter_frontend/utils/shared_prefs_helper.dart';
 import 'package:flutter_frontend/views/get_statred_page.dart';
-import 'package:flutter_frontend/views/home_page.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: widget.hasSeen
-          ? AuthGate(page: HomePage())
+          ? const AuthGate(page: MainPage())
           : const GetStarted(),
     );
   }

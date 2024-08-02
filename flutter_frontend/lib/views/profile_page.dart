@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/components/my_app_bar.dart';
 import 'package:flutter_frontend/components/my_button.dart';
-import 'package:flutter_frontend/components/my_nav_bar.dart';
 import 'package:flutter_frontend/utils/images_helper.dart';
 import 'package:flutter_frontend/services/authentification/auth_service.dart';
 import 'package:provider/provider.dart';
 
-class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
+  State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
@@ -44,7 +43,6 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         ),
       ),
-      bottomNavigationBar: const MyNavBar(selectedIndex: 4),
     );
   }
 

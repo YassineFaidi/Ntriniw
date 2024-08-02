@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/components/my_app_bar.dart';
-import 'package:flutter_frontend/components/my_nav_bar.dart';
 
 class WorkshopsPage extends StatefulWidget {
   const WorkshopsPage({super.key});
@@ -20,6 +19,6 @@ class _HomePageState extends State<WorkshopsPage> {
             style: TextStyle(fontSize: 24),
           ),
         ),
-        bottomNavigationBar: MyNavBar(selectedIndex: 1));
+        );
   }
 }
