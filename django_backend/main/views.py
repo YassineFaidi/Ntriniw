@@ -6,7 +6,7 @@ import bcrypt
 import json
 
 @csrf_exempt
-def sign_up_view(request):
+def sign_up(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -50,9 +50,8 @@ def sign_up_view(request):
 
     return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
 
-
 @csrf_exempt
-def sign_in_view(request):
+def sign_in(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -75,4 +74,52 @@ def sign_in_view(request):
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
 
+    return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+
+@csrf_exempt
+def new_post(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            userId = data.get('userId')
+            content = data.get('content')
+            image_base64 = data.get('postImg')
+            
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT id FROM users WHERE id = %s", [userId])
+                if not cursor.fetchone():
+                    return JsonResponse({'success': False, 'error': 'Uknown user'})
+
+            if image_base64:
+                image_data = base64.b64decode(image_base64)
+            else:
+                image_data = None
+            try :
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "INSERT INTO posts (user_id, content, image) VALUES (%s, %s, %s)",
+                        [userId, content, image_data]
+                    )
+                    return JsonResponse({'success': True, 'message': 'Post created successfully'})
+            except Exception as e:
+                return JsonResponse({'success': False, 'error': 'Post creation failed'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+
+def get_posts(request):
+    if request.method == 'GET':
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT created_at, user_id, content, image FROM posts ORDER BY created_at DESC")
+                posts = cursor.fetchall()
+                posts_list = []
+                for post in posts:
+                    cursor.execute("SELECT username, profileImg from users  WHERE id = %s", [post[1]])
+                    user = cursor.fetchone()
+                    posts_list.append({"username": str(user[0]), "userImage": base64.b64encode(user[1]).decode() if user[1] else None, "created_at": str(post[0]),"content": str(post[2]), "image": base64.b64encode(post[3]).decode() if post[3] else None})
+            return JsonResponse({"success": True, "posts": posts_list})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)}, status=500)
     return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)

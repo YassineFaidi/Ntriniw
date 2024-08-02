@@ -11,8 +11,6 @@ class UserCredential {
       required this.profileImg});
 
   factory UserCredential.fromJson(Map<String, dynamic> json) {
-    print("Json");
-    print(json);
     return UserCredential(
       uid: json['uid'],
       username: json['username'],

@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: widget.hasSeen
-          ? const AuthGate(page: HomePage())
+          ? AuthGate(page: HomePage())
           : const GetStarted(),
     );
   }

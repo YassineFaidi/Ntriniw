@@ -12,3 +12,27 @@ CREATE TABLE users (
     PRIMARY KEY (id)
 );
 
+-- posts table creation
+
+CREATE TABLE posts (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    user_id INT(11) NOT NULL,
+    content TEXT NOT NULL,
+    image MEDIUMBLOB NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- stories table creation
+
+CREATE TABLE stories (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    user_id INT(11) NOT NULL,
+    content TEXT NULL,
+    image MEDIUMBLOB NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);

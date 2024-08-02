@@ -15,3 +15,16 @@ class UserImg {
     return profileImage;
   }
 }
+
+// ignore: camel_case_types
+class postImg {
+  postImg();
+
+  static ImageProvider getPostImg(String postImg) {
+    ImageProvider? profileImage;
+
+    profileImage = MemoryImage(base64Decode(postImg));
+
+    return profileImage;
+  }
+}
