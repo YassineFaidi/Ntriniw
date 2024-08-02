@@ -1,7 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/components/my_button.dart';
+import 'package:flutter_frontend/models/story.dart';
+import 'package:flutter_frontend/services/authentification/auth_service.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class NewStory extends StatefulWidget {
   const NewStory({super.key});
@@ -25,72 +28,37 @@ class _NewStoryState extends State<NewStory> {
   }
 
   Future<void> _createStory() async {
-    // if (_imageFile == null) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(content: Text('Please provide an image')),
-    //   );
-    //   return;
-    // }
+    if (_imageFile == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please provide an image')),
+      );
+      return;
+    }
 
-    // setState(() {
-    //   _isLoading = true;
-    // });
+    setState(() {
+      _isLoading = true;
+    });
 
-    // try {
-    //   User? user = FirebaseAuth.instance.currentUser;
-    //   if (user == null) {
-    //     throw Exception('User not authenticated');
-    //   }
+    try {
+      final authService = Provider.of<AuthService>(context, listen: false);
+      await Story.createStory(authService, _imageFile!);
 
-    //   String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    //   Reference storageRef = FirebaseStorage.instance
-    //       .ref()
-    //       .child('stories')
-    //       .child(user.uid)
-    //       .child(fileName);
-    //   await storageRef.putFile(_imageFile!);
-    //   String imageUrl = await storageRef.getDownloadURL();
-
-    //   DocumentSnapshot<Map<String, dynamic>> userInfo = await FirebaseFirestore
-    //       .instance
-    //       .collection("users")
-    //       .doc(user.uid)
-    //       .get();
-
-    //   final PaletteGenerator paletteGenerator =
-    //       await PaletteGenerator.fromImageProvider(
-    //     CachedNetworkImageProvider(imageUrl),
-    //   );
-    //   final Color backgroundColor =
-    //       paletteGenerator.dominantColor?.color ?? Colors.black;
-
-    //   await FirebaseFirestore.instance.collection('stories').add({
-    //     'userId': user.uid,
-    //     'username': userInfo.data()?['username'],
-    //     'profileImg': userInfo.data()?['profileImg'],
-    //     'image_url': imageUrl,
-    //     'timestamp': FieldValue.serverTimestamp(),
-    //     'backgroundColor': backgroundColor.toString(),
-    //   });
-
-    //   // ignore: use_build_context_synchronously
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(content: Text('Storie created successfully')),
-    //   );
-
-    //   // ignore: use_build_context_synchronously
-    //   Navigator.pop(context);
-    //   // ignore: use_build_context_synchronously
-    //   Navigator.pop(context);
-    // } catch (e) {
-    //   // ignore: use_build_context_synchronously
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Text('Error creating story: $e')),
-    //   );
-    //   setState(() {
-    //     _isLoading = false;
-    //   });
-    // }
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Story created successfully')),
+      );
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context);
+    } catch (e) {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error creating story: $e')),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override

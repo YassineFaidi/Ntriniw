@@ -1,13 +1,13 @@
+import 'package:flutter_frontend/models/story.dart';
 import 'package:flutter_frontend/services/authentification/auth_service.dart';
 import 'package:flutter_frontend/constants/api_endpoints.dart';
-import 'package:flutter_frontend/models/post.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 
-class PostService {
-  static Future<void> createPost(
-      AuthService authService, String content, File imageFile) async {
+class StoryService {
+  static Future<void> createStory(
+      AuthService authService, File imageFile) async {
     final user = authService.userCredential;
 
     if (user == null) {
@@ -17,51 +17,49 @@ class PostService {
     String base64Image = base64Encode(await imageFile.readAsBytes());
 
     final response = await http.post(
-      Uri.parse(newPostEndpoint),
+      Uri.parse(newStoryEndpoint),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
         'userId': user.uid.toString(),
-        'content': content,
-        'postImg': base64Image,
+        'storyImg': base64Image,
       }),
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Failed to create post');
+      throw Exception('Failed to create story');
     }
 
     final responseBody = jsonDecode(response.body);
     if (!responseBody['success']) {
-      throw Exception('Post creation failed');
+      throw Exception('Story creation failed');
     }
   }
 
-  static Future<List<Post>> fetchPosts() async {
+  static Future<List<Story>> fetchStories() async {
     try {
-      final response = await http.get(Uri.parse(getPostsEndpoint));
+      final response = await http.get(Uri.parse(getStoriesEndpoint));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseBody = jsonDecode(response.body);
 
         if (responseBody['success'] == true &&
-            responseBody.containsKey('posts')) {
-          final List<dynamic> postsData = responseBody['posts'];
+            responseBody.containsKey('stories')) {
+          final List<dynamic> postsData = responseBody['stories'];
           return postsData.map((data) {
-            return Post(
+            return Story(
               username: data['username'],
-              content: data['content'],
-              postImage: data['image'],
+              storyImage: data['image'],
               userImage: data['userImage'] ?? '',
-              postTime: data['created_at'],
+              storyTime: data['created_at'],
             );
           }).toList();
         } else {
-          throw Exception('Failed to load posts');
+          throw Exception('Failed to load stories');
         }
       } else {
-        throw Exception('Failed to load posts');
+        throw Exception('Failed to load stories');
       }
     } catch (e) {
       return [];

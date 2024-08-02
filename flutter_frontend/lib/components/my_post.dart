@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter_frontend/utils/images_helper.dart';
 
 class MyPost extends StatefulWidget {
-  final String userImage;
+  final String? userImage;
   final String username;
   final String postTime;
   final String postImage;

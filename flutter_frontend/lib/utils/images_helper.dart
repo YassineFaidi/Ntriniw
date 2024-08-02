@@ -5,12 +5,12 @@ import 'dart:convert';
 class UserImg {
   UserImg();
 
-  static ImageProvider? getuserImg(String profileImg) {
+  static ImageProvider? getuserImg(String? profileImg) {
     ImageProvider? profileImage;
     if (profileImg == '') {
       profileImage = const AssetImage(userImg);
     } else {
-      profileImage = MemoryImage(base64Decode(profileImg));
+      profileImage = MemoryImage(base64Decode(profileImg!));
     }
     return profileImage;
   }

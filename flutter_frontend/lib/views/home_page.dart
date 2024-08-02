@@ -5,6 +5,7 @@ import 'package:flutter_frontend/components/my_post.dart';
 import 'package:flutter_frontend/components/my_story.dart';
 import 'package:flutter_frontend/constants/app_colors.dart';
 import 'package:flutter_frontend/models/post.dart';
+import 'package:flutter_frontend/models/story.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,10 +18,14 @@ class _HomePageState extends State<HomePage> {
   late Future<List<Post>> futurePosts;
   List<Post>? posts;
 
+  late Future<List<Story>> futureStories;
+  List<Story>? stories;
+
   @override
   void initState() {
     super.initState();
     futurePosts = fetchPosts();
+    futureStories = fetchStories();
   }
 
   Future<List<Post>> fetchPosts() async {
@@ -28,8 +33,14 @@ class _HomePageState extends State<HomePage> {
     return posts!;
   }
 
-  Future<void> _refreshPosts() async {
+  Future<List<Story>> fetchStories() async {
+    stories = await Story.fetchStories();
+    return stories!;
+  }
+
+  Future<void> _refresh() async {
     futurePosts = fetchPosts();
+    futureStories = fetchStories();
     setState(() {});
   }
 
@@ -40,71 +51,64 @@ class _HomePageState extends State<HomePage> {
       appBar: const MyAppBar(),
       body: RefreshIndicator(
         color: myPrimaryColor,
-        onRefresh: _refreshPosts,
+        onRefresh: _refresh,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
               SizedBox(
                 height: 110,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: const [
-                    NewPage(),
-                    MyStory(
-                        userImageUrl:
-                            'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcThF3J5WaWVDPUXiot1oCnCLM7mSAGx6PCSxMQyTs9Odd-cQHVP',
-                        username: 'username'),
-                    MyStory(
-                        userImageUrl:
-                            'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcThF3J5WaWVDPUXiot1oCnCLM7mSAGx6PCSxMQyTs9Odd-cQHVP',
-                        username: 'username'),
-                    MyStory(
-                        userImageUrl:
-                            'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcThF3J5WaWVDPUXiot1oCnCLM7mSAGx6PCSxMQyTs9Odd-cQHVP',
-                        username: 'username'),
-                    MyStory(
-                        userImageUrl:
-                            'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcThF3J5WaWVDPUXiot1oCnCLM7mSAGx6PCSxMQyTs9Odd-cQHVP',
-                        username: 'username'),
-                    MyStory(
-                        userImageUrl:
-                            'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcThF3J5WaWVDPUXiot1oCnCLM7mSAGx6PCSxMQyTs9Odd-cQHVP',
-                        username: 'username'),
-                    MyStory(
-                        userImageUrl:
-                            'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcThF3J5WaWVDPUXiot1oCnCLM7mSAGx6PCSxMQyTs9Odd-cQHVP',
-                        username: 'username'),
-                  ],
+                child: FutureBuilder<List<Story>>(
+                  future: futureStories,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(
+                        child: Text('No stories available.'),
+                      );
+                    } else {
+                      final stories = snapshot.data!;
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: stories.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index == 0) {
+                            return const NewPage();
+                          } else {
+                            final story = stories[index - 1];
+                            return MyStory(
+                              storyImage: story.storyImage,
+                              userImage: story.userImage,
+                              username: story.username,
+                            );
+                          }
+                        },
+                      );
+                    }
+                  },
                 ),
               ),
               FutureBuilder<List<Post>>(
                 future: futurePosts,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 240,
-                        ),
-                        CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(myPrimaryColor),
-                        ),
-                      ],
-                    );
+                    return const Column(children: [
+                      SizedBox(
+                        height: 260,
+                      ),
+                      CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(myPrimaryColor),
+                      ),
+                    ]);
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 260,
-                        ),
-                        Text('No posts available.')
-                      ],
+                    return const Center(
+                      child: Text('No posts available.'),
                     );
                   } else {
                     final posts = snapshot.data!;

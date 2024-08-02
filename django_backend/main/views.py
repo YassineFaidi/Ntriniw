@@ -123,3 +123,51 @@ def get_posts(request):
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)}, status=500)
     return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+
+@csrf_exempt
+def new_story(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            userId = data.get('userId')
+            image_base64 = data.get('storyImg')
+            
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT id FROM users WHERE id = %s", [userId])
+                if not cursor.fetchone():
+                    return JsonResponse({'success': False, 'error': 'Uknown user'})
+
+            if image_base64:
+                image_data = base64.b64decode(image_base64)
+            else:
+                image_data = None
+            try :
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "INSERT INTO stories (user_id, image) VALUES (%s, %s)",
+                        [userId, image_data]
+                    )
+                    return JsonResponse({'success': True, 'message': 'Story created successfully'})
+            except Exception as e:
+                return JsonResponse({'success': False, 'error': 'Story creation failed'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+
+def get_stories(request):
+    if request.method == 'GET':
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT created_at, user_id, image FROM stories ORDER BY created_at DESC")
+                stories = cursor.fetchall()
+                stories_list = []
+                for story in stories:
+                    cursor.execute("SELECT username, profileImg from users  WHERE id = %s", [story[1]])
+                    user = cursor.fetchone()
+                    stories_list.append({"username": str(user[0]), "userImage": base64.b64encode(user[1]).decode() if user[1] else None, "created_at": str(story[0]), "image": base64.b64encode(story[2]).decode() if story[2] else None})
+            return JsonResponse({"success": True, "stories": stories_list})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)}, status=500)
+    return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+

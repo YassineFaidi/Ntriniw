@@ -1,13 +1,17 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/utils/images_helper.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyStory extends StatefulWidget {
-  final String userImageUrl;
+  final String? userImage;
   final String username;
+  final String? storyImage;
 
   const MyStory(
-      {super.key, required this.userImageUrl, required this.username});
+      {super.key,
+      required this.userImage,
+      required this.username,
+      required this.storyImage});
 
   @override
   State<MyStory> createState() => _MyStoryState();
@@ -64,10 +68,12 @@ class _MyStoryState extends State<MyStory> {
                     ),
                   ),
                   child: ClipOval(
-                      child: CachedNetworkImage(
-                    imageUrl: widget.userImageUrl,
-                    fit: BoxFit.cover,
-                  )),
+                    child: Image(
+                      image:
+                          UserImg.getuserImg(widget.userImage) as ImageProvider,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 4.0),
                 Flexible(

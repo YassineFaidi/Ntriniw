@@ -3,7 +3,7 @@ import 'package:flutter_frontend/services/posts/post_service.dart';
 import '../services/authentification/auth_service.dart';
 
 class Post {
-  final String userImage;
+  final String? userImage;
   final String username;
   final String postTime;
   final String content;
