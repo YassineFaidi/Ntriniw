@@ -17,10 +17,10 @@ class UserImg {
 }
 
 // ignore: camel_case_types
-class postImg {
-  postImg();
+class dbImg {
+  dbImg();
 
-  static ImageProvider getPostImg(String postImg) {
+  static ImageProvider getDbImg(String postImg) {
     ImageProvider? profileImage;
 
     profileImage = MemoryImage(base64Decode(postImg));

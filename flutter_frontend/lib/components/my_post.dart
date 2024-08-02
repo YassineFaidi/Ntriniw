@@ -29,7 +29,8 @@ class _MyPostState extends State<MyPost> {
   int _commentCount = 117;
 
   String _getTimeAgo(String postTime) {
-    final DateTime postDateTime = DateFormat('yyyy-MM-dd HH:mm:ss').parse(postTime);
+    final DateTime postDateTime =
+        DateFormat('yyyy-MM-dd HH:mm:ss').parse(postTime);
     final Duration difference = DateTime.now().difference(postDateTime);
 
     if (difference.inDays > 0) {
@@ -70,7 +71,8 @@ class _MyPostState extends State<MyPost> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
-                        image: UserImg.getuserImg(widget.userImage) as ImageProvider,
+                        image: UserImg.getuserImg(widget.userImage)
+                            as ImageProvider,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -86,7 +88,8 @@ class _MyPostState extends State<MyPost> {
                     ),
                     Text(
                       _getTimeAgo(widget.postTime),
-                      style: const TextStyle(fontSize: 12.0, color: Colors.grey),
+                      style:
+                          const TextStyle(fontSize: 12.0, color: Colors.grey),
                     ),
                   ],
                 ),
@@ -96,7 +99,7 @@ class _MyPostState extends State<MyPost> {
             ),
           ),
           Image(
-            image: postImg.getPostImg(widget.postImage),
+            image: dbImg.getDbImg(widget.postImage),
             fit: BoxFit.cover,
             width: double.infinity,
           ),
@@ -106,7 +109,9 @@ class _MyPostState extends State<MyPost> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 IconButton(
-                  icon: _isLiked ? const Icon(Icons.thumb_up_alt) : const Icon(Icons.thumb_up_alt_outlined),
+                  icon: _isLiked
+                      ? const Icon(Icons.thumb_up_alt)
+                      : const Icon(Icons.thumb_up_alt_outlined),
                   onPressed: () {},
                 ),
                 Text(

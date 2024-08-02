@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/components/view_stories.dart';
 import 'package:flutter_frontend/utils/images_helper.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_frontend/models/story.dart';
 
 class MyStory extends StatefulWidget {
   final String? userImage;
   final String username;
   final String? storyImage;
+  final String storyTime;
+  final List<Story> stories;
+  final int index;
 
-  const MyStory(
-      {super.key,
-      required this.userImage,
-      required this.username,
-      required this.storyImage});
+  const MyStory({
+    super.key,
+    required this.userImage,
+    required this.username,
+    required this.storyImage,
+    required this.storyTime,
+    required this.stories,
+    required this.index,
+  });
 
   @override
   State<MyStory> createState() => _MyStoryState();
@@ -32,6 +41,15 @@ class _MyStoryState extends State<MyStory> {
     setState(() {
       _opacity = 1.0;
       _scale = 1.0;
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ViewStories(
+            stories: widget.stories,
+            initialIndex: widget.index,
+          ),
+        ),
+      );
     });
   }
 

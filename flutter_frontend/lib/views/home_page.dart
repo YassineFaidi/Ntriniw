@@ -80,9 +80,12 @@ class _HomePageState extends State<HomePage> {
                           } else {
                             final story = stories[index - 1];
                             return MyStory(
-                              storyImage: story.storyImage,
                               userImage: story.userImage,
                               username: story.username,
+                              storyImage: story.storyImage,
+                              storyTime: story.storyTime,
+                              stories: stories,
+                              index: index - 1,
                             );
                           }
                         },
