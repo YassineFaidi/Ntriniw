@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/components/view_stories.dart';
-import 'package:flutter_frontend/utils/images_helper.dart';
+import 'package:flutter_frontend/utils/my_helper.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_frontend/models/story.dart';
 
@@ -87,8 +87,8 @@ class _MyStoryState extends State<MyStory> {
                   ),
                   child: ClipOval(
                     child: Image(
-                      image:
-                          UserImg.getuserImg(widget.userImage) as ImageProvider,
+                      image: MyHelper.getuserImg(widget.userImage)
+                          as ImageProvider,
                       fit: BoxFit.cover,
                     ),
                   ),

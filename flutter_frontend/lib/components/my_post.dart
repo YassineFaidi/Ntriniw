@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_frontend/utils/images_helper.dart';
+import 'package:flutter_frontend/utils/my_helper.dart';
 
 class MyPost extends StatefulWidget {
   final String? userImage;
@@ -71,7 +71,7 @@ class _MyPostState extends State<MyPost> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
-                        image: UserImg.getuserImg(widget.userImage)
+                        image: MyHelper.getuserImg(widget.userImage)
                             as ImageProvider,
                         fit: BoxFit.cover,
                       ),
@@ -99,7 +99,7 @@ class _MyPostState extends State<MyPost> {
             ),
           ),
           Image(
-            image: dbImg.getDbImg(widget.postImage),
+            image: MyHelper.getDbImg(widget.postImage),
             fit: BoxFit.cover,
             width: double.infinity,
           ),

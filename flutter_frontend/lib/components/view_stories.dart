@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/models/story.dart';
-import 'package:flutter_frontend/utils/images_helper.dart';
+import 'package:flutter_frontend/utils/my_helper.dart';
 
 class ViewStories extends StatefulWidget {
   final List<Story> stories;
@@ -59,7 +59,7 @@ class _ViewStoriesState extends State<ViewStories> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image(
-                    image: dbImg.getDbImg(story.storyImage!),
+                    image: MyHelper.getDbImg(story.storyImage!),
                   ),
                   const SizedBox(height: 20),
                   Text(

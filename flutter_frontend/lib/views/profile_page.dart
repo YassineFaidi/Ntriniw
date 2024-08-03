@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/components/my_app_bar.dart';
 import 'package:flutter_frontend/components/my_button.dart';
-import 'package:flutter_frontend/utils/images_helper.dart';
+import 'package:flutter_frontend/utils/my_helper.dart';
 import 'package:flutter_frontend/services/authentification/auth_service.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               ...[
                 CircleAvatar(
-                  backgroundImage: UserImg.getuserImg(user!.profileImg),
+                  backgroundImage: MyHelper.getuserImg(user!.profileImg),
                   radius: 50.0,
                 ),
                 const SizedBox(height: 20),
