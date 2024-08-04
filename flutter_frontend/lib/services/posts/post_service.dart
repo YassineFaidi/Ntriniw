@@ -55,6 +55,7 @@ class PostService {
               postImage: data['image'],
               userImage: data['userImage'] ?? '',
               postTime: data['created_at'],
+              postId: data['postId'],
             );
           }).toList();
         } else {
@@ -65,6 +66,63 @@ class PostService {
       }
     } catch (e) {
       return [];
+    }
+  }
+
+  static Future<List> getPostLikesCount(
+      String postId, String actualUserId) async {
+    try {
+      final response = await http.post(
+        Uri.parse(getPostLikesCountEndpoint),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'postId': postId,
+          'actualUserId': actualUserId,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        if (responseBody['success'] == true &&
+            responseBody.containsKey('likes_count')) {
+          final String likesCount = responseBody['likes_count'];
+          final String isLiked = responseBody['isLiked'];
+
+          return [likesCount, isLiked];
+        } else {
+          throw Exception('Failed to load post likes');
+        }
+      } else {
+        throw Exception('Failed to load post likes');
+      }
+    } catch (e) {
+      return [];
+    }
+  }
+
+  static Future<void> setPostLike(
+      String postId, String userId, bool isLiked) async {
+    final response = await http.post(
+      Uri.parse(setPostLikeEndpoint),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'postId': postId,
+        'userId': userId,
+        'isLiked': isLiked.toString(),
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to like post');
+    }
+
+    final responseBody = jsonDecode(response.body);
+    if (!responseBody['success']) {
+      throw Exception('Liking post failed');
     }
   }
 }

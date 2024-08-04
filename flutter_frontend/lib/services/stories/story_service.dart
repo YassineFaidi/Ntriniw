@@ -33,6 +33,11 @@ class StoryService {
 
     final responseBody = jsonDecode(response.body);
     if (!responseBody['success']) {
+      if (responseBody['error'] == 'isStory') {
+        throw Exception('isStory');
+      } else if (responseBody['error'] == 'isUknown') {
+        throw Exception('isUknown');
+      }
       throw Exception('Story creation failed');
     }
   }

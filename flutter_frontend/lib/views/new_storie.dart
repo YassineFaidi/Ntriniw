@@ -50,6 +50,21 @@ class _NewStoryState extends State<NewStory> {
       // ignore: use_build_context_synchronously
       Navigator.pop(context);
     } catch (e) {
+      if (e is Exception) {
+        var message = e.toString();
+        if (message.contains('isStory')) {
+          // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content: Text('You can only share one story per day')),
+          );
+        } else if (message.contains('isUknown')) {
+          // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Uknown user')),
+          );
+        }
+      }
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error creating story: $e')),

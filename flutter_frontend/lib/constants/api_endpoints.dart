@@ -9,3 +9,5 @@ const newPostEndpoint = 'http://${serverIp}:${serverPort}/newPost/';
 const getPostsEndpoint = 'http://${serverIp}:${serverPort}/getPosts/';
 const newStoryEndpoint = 'http://${serverIp}:${serverPort}/newStory/';
 const getStoriesEndpoint = 'http://${serverIp}:${serverPort}/getStories/';
+const getPostLikesCountEndpoint = 'http://${serverIp}:${serverPort}/getPostLikesCount/';
+const setPostLikeEndpoint = 'http://${serverIp}:${serverPort}/setPostLike/';

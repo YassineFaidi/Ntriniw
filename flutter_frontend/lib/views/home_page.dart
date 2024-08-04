@@ -6,6 +6,8 @@ import 'package:flutter_frontend/components/my_story.dart';
 import 'package:flutter_frontend/constants/app_colors.dart';
 import 'package:flutter_frontend/models/post.dart';
 import 'package:flutter_frontend/models/story.dart';
+import 'package:flutter_frontend/services/authentification/auth_service.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -46,6 +48,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+    final user = authService.userCredential;
+    
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const MyAppBar(),
@@ -124,6 +129,8 @@ class _HomePageState extends State<HomePage> {
                       itemBuilder: (context, index) {
                         final post = posts[index];
                         return MyPost(
+                          actualUserId: user!.uid.toString(),
+                          postId: post.postId,
                           userImage: post.userImage,
                           username: post.username,
                           postTime: post.postTime,

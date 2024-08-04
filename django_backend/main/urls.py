@@ -8,4 +8,7 @@ urlpatterns = [
     path('getPosts/', views.get_posts, name='getPosts'),
     path('newStory/', views.new_story, name='newStory'),
     path('getStories/', views.get_stories, name='getStories'),
+    path('getPostLikesCount/', views.get_post_likes_count, name='getPostLikesCount'),
+    path('setPostLike/', views.set_post_like, name='setPostLike'),
+    
 ]

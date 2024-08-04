@@ -3,6 +3,7 @@ import 'package:flutter_frontend/services/posts/post_service.dart';
 import '../services/authentification/auth_service.dart';
 
 class Post {
+  final String postId;
   final String? userImage;
   final String username;
   final String postTime;
@@ -10,6 +11,7 @@ class Post {
   final String? postImage;
 
   Post({
+    required this.postId,
     required this.userImage,
     required this.username,
     required this.postTime,
@@ -17,11 +19,21 @@ class Post {
     required this.postImage,
   });
 
-  static Future<void> createPost(AuthService authService, String content, File imageFile) async {
+  static Future<void> createPost(
+      AuthService authService, String content, File imageFile) async {
     await PostService.createPost(authService, content, imageFile);
   }
 
   static Future<List<Post>> fetchPosts() async {
     return await PostService.fetchPosts();
+  }
+
+  static Future<List> getPostLikesCount(String postId, String actualUserId) async {
+    return await PostService.getPostLikesCount(postId,actualUserId);
+  }
+
+  static Future<void> setPostLike(
+      String postId, String userId, bool isLiked) async {
+    await PostService.setPostLike(postId, userId, isLiked);
   }
 }

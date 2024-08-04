@@ -113,13 +113,13 @@ def get_posts(request):
     if request.method == 'GET':
         try:
             with connection.cursor() as cursor:
-                cursor.execute("SELECT created_at, user_id, content, image FROM posts ORDER BY created_at DESC")
+                cursor.execute("SELECT created_at, user_id, content, image, id FROM posts ORDER BY created_at DESC")
                 posts = cursor.fetchall()
                 posts_list = []
                 for post in posts:
                     cursor.execute("SELECT username, profileImg from users  WHERE id = %s", [post[1]])
                     user = cursor.fetchone()
-                    posts_list.append({"username": str(user[0]), "userImage": base64.b64encode(user[1]).decode() if user[1] else None, "created_at": str(post[0]),"content": str(post[2]), "image": base64.b64encode(post[3]).decode() if post[3] else None})
+                    posts_list.append({"username": str(user[0]), "userImage": base64.b64encode(user[1]).decode() if user[1] else None, "created_at": str(post[0]),"content": str(post[2]), "image": base64.b64encode(post[3]).decode() if post[3] else None, "postId": str(post[4])})
             return JsonResponse({"success": True, "posts": posts_list})
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)}, status=500)
@@ -136,7 +136,11 @@ def new_story(request):
             with connection.cursor() as cursor:
                 cursor.execute("SELECT id FROM users WHERE id = %s", [userId])
                 if not cursor.fetchone():
-                    return JsonResponse({'success': False, 'error': 'Uknown user'})
+                    return JsonResponse({'success': False, 'error': 'isUknown'})
+                else:
+                    cursor.execute("SELECT id FROM stories WHERE user_id = %s", [userId])
+                    if cursor.fetchone():
+                        return JsonResponse({'success': False, 'error': 'isStory'})
 
             if image_base64:
                 image_data = base64.b64decode(image_base64)
@@ -181,3 +185,49 @@ def get_stories(request):
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)}, status=500)
     return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+
+@csrf_exempt
+def get_post_likes_count(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        postId = data.get('postId')
+        actualUserId = data.get('actualUserId')
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT COUNT(user_id) FROM likes WHERE post_id = %s", [postId])
+                likes_count = cursor.fetchone()[0]
+                cursor.execute("SELECT user_id FROM likes WHERE post_id = %s and user_id = %s", [postId, actualUserId])
+                if cursor.fetchone():
+                    isLiked = True
+                else:
+                    isLiked = False
+            return JsonResponse({"success": True, "likes_count": str(likes_count), "isLiked": str(isLiked)})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+    return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+
+@csrf_exempt
+def set_post_like(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        postId = data.get('postId')
+        userId = data.get('userId')
+        isLiked = data.get('isLiked')
+
+        if isLiked == 'true':    
+            try:
+                with connection.cursor() as cursor:
+                    cursor.execute("DELETE FROM likes WHERE post_id = %s and user_id =%s", [postId, userId])
+                return JsonResponse({"success": True})
+            except Exception as e:
+                return JsonResponse({"success": False, "error": str(e)})
+        else:   
+            try:
+                with connection.cursor() as cursor:
+                    cursor.execute("INSERT INTO likes (user_id, post_id) VALUES (%s, %s)", [userId, postId])
+                return JsonResponse({"success": True})
+            except Exception as e:
+                return JsonResponse({"success": False, "error": str(e)})
+    return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+
+

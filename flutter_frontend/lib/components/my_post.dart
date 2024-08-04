@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/models/post.dart';
 import 'package:flutter_frontend/utils/my_helper.dart';
 
 class MyPost extends StatefulWidget {
+  final String postId;
   final String? userImage;
   final String username;
   final String postTime;
   final String postImage;
   final String content;
+  final String actualUserId;
 
   const MyPost({
     super.key,
@@ -15,6 +18,8 @@ class MyPost extends StatefulWidget {
     required this.postTime,
     required this.postImage,
     required this.content,
+    required this.postId,
+    required this.actualUserId,
   });
 
   @override
@@ -27,10 +32,42 @@ class _MyPostState extends State<MyPost> {
   int _likeCount = 117;
   int _commentCount = 117;
 
+  @override
+  void initState() {
+    super.initState();
+    _loadLikes();
+  }
+
+  void _loadLikes() async {
+    final getLikes =
+        await Post.getPostLikesCount(widget.postId, widget.actualUserId);
+
+    setState(() {
+      _likeCount = int.parse(getLikes[0]);
+      _isLiked = getLikes[1] == 'True';
+    });
+  }
+
   void _toggleExpanded() {
     setState(() {
       _isExpanded = !_isExpanded;
     });
+  }
+
+  void _toggleLike() async {
+    if (_isLiked) {
+      await Post.setPostLike(widget.postId, widget.actualUserId, true);
+      setState(() {
+        _isLiked = false;
+        _likeCount -= 1;
+      });
+    } else {
+      await Post.setPostLike(widget.postId, widget.actualUserId, false);
+      setState(() {
+        _isLiked = true;
+        _likeCount += 1;
+      });
+    }
   }
 
   @override
@@ -95,7 +132,7 @@ class _MyPostState extends State<MyPost> {
                   icon: _isLiked
                       ? const Icon(Icons.thumb_up_alt)
                       : const Icon(Icons.thumb_up_alt_outlined),
-                  onPressed: () {},
+                  onPressed: _toggleLike,
                 ),
                 Text(
                   '$_likeCount',
