@@ -66,8 +66,10 @@ class _HomePageState extends State<HomePage> {
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(
-                        child: Text('No stories available.'),
+                      return const Row(
+                        children: [
+                          NewPage(),
+                        ],
                       );
                     } else {
                       final stories = snapshot.data!;

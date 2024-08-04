@@ -1,8 +1,11 @@
 // import 'package:flutter/material.dart';
 
-const signInEndpoint = 'http://192.168.28.57:1234/signIn/';
-const signUpEndpoint = 'http://192.168.28.57:1234/signUp/';
-const newPostEndpoint = 'http://192.168.28.57:1234/newPost/';
-const getPostsEndpoint = 'http://192.168.28.57:1234/getPosts/';
-const newStoryEndpoint = 'http://192.168.28.57:1234/newStory/';
-const getStoriesEndpoint = 'http://192.168.28.57:1234/getStories/';
+const serverIp = '192.168.231.57';
+const serverPort = '1234';
+
+const signInEndpoint = 'http://${serverIp}:${serverPort}/signIn/';
+const signUpEndpoint = 'http://${serverIp}:${serverPort}/signUp/';
+const newPostEndpoint = 'http://${serverIp}:${serverPort}/newPost/';
+const getPostsEndpoint = 'http://${serverIp}:${serverPort}/getPosts/';
+const newStoryEndpoint = 'http://${serverIp}:${serverPort}/newStory/';
+const getStoriesEndpoint = 'http://${serverIp}:${serverPort}/getStories/';

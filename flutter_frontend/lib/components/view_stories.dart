@@ -33,15 +33,6 @@ class _ViewStoriesState extends State<ViewStories> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        leading: IconButton(
-          icon: Icon(Icons.close),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
       body: PageView.builder(
         controller: _pageController,
         itemCount: widget.stories.length,
@@ -52,29 +43,56 @@ class _ViewStoriesState extends State<ViewStories> {
         },
         itemBuilder: (context, index) {
           final story = widget.stories[index];
-          return Container(
-            color: Colors.black,
-            child: Center(
+          return SafeArea(
+            child: Container(
+              color: Colors.black,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image(
-                    image: MyHelper.getDbImg(story.storyImage!),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    story.username,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        ClipOval(
+                          child: Container(
+                            width: 40.0,
+                            height: 40.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: MyHelper.getuserImg(story.userImage)
+                                    as ImageProvider,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8.0),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              story.username,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            ),
+                            Text(
+                              MyHelper.getTimeAgo(story.storyTime),
+                              style: const TextStyle(
+                                  fontSize: 12.0, color: Colors.white),
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
+                        const Icon(Icons.more_vert_outlined, color: Colors.white),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    story.storyTime,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
+                  Expanded(
+                    child: Center(
+                      child: Image(
+                        image: MyHelper.getDbImg(story.storyImage!),
+                      ),
                     ),
                   ),
                 ],

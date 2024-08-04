@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_frontend/utils/my_helper.dart';
 
 class MyPost extends StatefulWidget {
@@ -27,22 +26,6 @@ class _MyPostState extends State<MyPost> {
   bool _isLiked = false;
   int _likeCount = 117;
   int _commentCount = 117;
-
-  String _getTimeAgo(String postTime) {
-    final DateTime postDateTime =
-        DateFormat('yyyy-MM-dd HH:mm:ss').parse(postTime);
-    final Duration difference = DateTime.now().difference(postDateTime);
-
-    if (difference.inDays > 0) {
-      return '${difference.inDays} days ago';
-    } else if (difference.inHours > 0) {
-      return '${difference.inHours} hours ago';
-    } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes} minutes ago';
-    } else {
-      return 'Just now';
-    }
-  }
 
   void _toggleExpanded() {
     setState(() {
@@ -87,7 +70,7 @@ class _MyPostState extends State<MyPost> {
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      _getTimeAgo(widget.postTime),
+                      MyHelper.getTimeAgo(widget.postTime),
                       style:
                           const TextStyle(fontSize: 12.0, color: Colors.grey),
                     ),

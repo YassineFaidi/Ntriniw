@@ -1,8 +1,9 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.db import connection
-import base64
+import datetime
 import bcrypt
+import base64
 import json
 
 @csrf_exempt
@@ -159,15 +160,24 @@ def get_stories(request):
     if request.method == 'GET':
         try:
             with connection.cursor() as cursor:
-                cursor.execute("SELECT created_at, user_id, image FROM stories ORDER BY created_at DESC")
+                cursor.execute("SELECT id, created_at, user_id, image FROM stories ORDER BY created_at DESC")
                 stories = cursor.fetchall()
                 stories_list = []
                 for story in stories:
-                    cursor.execute("SELECT username, profileImg from users  WHERE id = %s", [story[1]])
-                    user = cursor.fetchone()
-                    stories_list.append({"username": str(user[0]), "userImage": base64.b64encode(user[1]).decode() if user[1] else None, "created_at": str(story[0]), "image": base64.b64encode(story[2]).decode() if story[2] else None})
+                    story_id, created_at, user_id, image = story
+                    time_diff = datetime.datetime.now() - created_at
+                    if time_diff.total_seconds() > 24 * 3600:
+                        cursor.execute("DELETE FROM stories WHERE id = %s", [story_id])
+                    else:
+                        cursor.execute("SELECT username, profileImg FROM users WHERE id = %s", [user_id])
+                        user = cursor.fetchone()
+                        stories_list.append({
+                            "username": str(user[0]),
+                            "userImage": base64.b64encode(user[1]).decode() if user[1] else None,
+                            "created_at": str(created_at),
+                            "image": base64.b64encode(image).decode() if image else None
+                        })
             return JsonResponse({"success": True, "stories": stories_list})
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)}, status=500)
     return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
-
