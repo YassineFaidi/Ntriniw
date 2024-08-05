@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter_frontend/models/comment.dart';
 import 'package:flutter_frontend/services/posts/post_service.dart';
 import '../services/authentification/auth_service.dart';
 
@@ -28,12 +29,23 @@ class Post {
     return await PostService.fetchPosts();
   }
 
-  static Future<List> getPostLikesCount(String postId, String actualUserId) async {
-    return await PostService.getPostLikesCount(postId,actualUserId);
+  static Future<List> getPostLikesCount(
+      String postId, String actualUserId) async {
+    return await PostService.getPostLikesCount(postId, actualUserId);
   }
 
   static Future<void> setPostLike(
       String postId, String userId, bool isLiked) async {
     await PostService.setPostLike(postId, userId, isLiked);
+  }
+
+  static Future<void> addComment(
+      String postId, String userId, String comment) async {
+    await PostService.addComment(postId, userId, comment);
+  }
+
+  static Future<List<Comment>> getPostComments(
+      String postId) async {
+    return await PostService.getPostComments(postId);
   }
 }

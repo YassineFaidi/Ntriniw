@@ -1,3 +1,4 @@
+import 'package:flutter_frontend/models/comment.dart';
 import 'package:flutter_frontend/services/authentification/auth_service.dart';
 import 'package:flutter_frontend/constants/api_endpoints.dart';
 import 'package:flutter_frontend/models/post.dart';
@@ -73,7 +74,7 @@ class PostService {
       String postId, String actualUserId) async {
     try {
       final response = await http.post(
-        Uri.parse(getPostLikesCountEndpoint),
+        Uri.parse(getLCCountEndpoint),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -89,8 +90,9 @@ class PostService {
             responseBody.containsKey('likes_count')) {
           final String likesCount = responseBody['likes_count'];
           final String isLiked = responseBody['isLiked'];
+          final String commentsCount = responseBody['comments_count'];
 
-          return [likesCount, isLiked];
+          return [likesCount, isLiked, commentsCount];
         } else {
           throw Exception('Failed to load post likes');
         }
@@ -123,6 +125,64 @@ class PostService {
     final responseBody = jsonDecode(response.body);
     if (!responseBody['success']) {
       throw Exception('Liking post failed');
+    }
+  }
+
+  static Future<void> addComment(
+      String postId, String userId, String comment) async {
+    final response = await http.post(
+      Uri.parse(addPostCommentEndpoint),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'postId': postId,
+        'userId': userId,
+        'comment': comment,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to add comment');
+    }
+
+    final responseBody = jsonDecode(response.body);
+    if (!responseBody['success']) {
+      throw Exception('Adding post comment failed');
+    }
+  }
+
+  static Future<List<Comment>> getPostComments(String postId) async {
+    try {
+      final response = await http.post(
+        Uri.parse(getPostCommentsEndpoint),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'postId': postId,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        if (responseBody['success'] == true &&
+            responseBody.containsKey('comments')) {
+          final List<dynamic> commentsList = responseBody['comments'];
+          return commentsList.map((data) {
+            return Comment(
+                username: data['username'],
+                userImage: data['userImage'] ?? '',
+                comment: data['comment']);
+          }).toList();
+        } else {
+          throw Exception('Failed to load post comments');
+        }
+      } else {
+        throw Exception('Failed to load post comments');
+      }
+    } catch (e) {
+      return [];
     }
   }
 }

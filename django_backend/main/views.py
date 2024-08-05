@@ -187,7 +187,7 @@ def get_stories(request):
     return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
 
 @csrf_exempt
-def get_post_likes_count(request):
+def get_lc_count(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         postId = data.get('postId')
@@ -201,7 +201,9 @@ def get_post_likes_count(request):
                     isLiked = True
                 else:
                     isLiked = False
-            return JsonResponse({"success": True, "likes_count": str(likes_count), "isLiked": str(isLiked)})
+                cursor.execute("SELECT COUNT(id) FROM comments WHERE post_id = %s", [postId])
+                comments_count = cursor.fetchone()[0]
+            return JsonResponse({"success": True, "likes_count": str(likes_count), "isLiked": str(isLiked), "comments_count": str(comments_count)})
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)})
     return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
@@ -230,4 +232,36 @@ def set_post_like(request):
                 return JsonResponse({"success": False, "error": str(e)})
     return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
 
+@csrf_exempt
+def add_post_comment(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        postId = data.get('postId')
+        userId = data.get('userId')
+        comment = data.get('comment')
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("INSERT INTO comments (post_id, user_id, comment) VALUES (%s, %s, %s)", [postId, userId, comment])
+            return JsonResponse({"success": True})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+    return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
 
+@csrf_exempt
+def get_post_comments(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        postId = data.get('postId')
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT user_id, comment FROM comments WHERE post_id = %s ORDER BY created_at", [postId])
+                comments = cursor.fetchall()
+                comments_list = []
+                for comment in comments:
+                    cursor.execute("SELECT username, profileImg from users  WHERE id = %s", [comment[0]])
+                    user = cursor.fetchone()
+                    comments_list.append({"username": str(user[0]), "userImage": base64.b64encode(user[1]).decode() if user[1] else None, "comment": str(comment[1])})
+            return JsonResponse({"success": True, "comments": comments_list})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+    return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)

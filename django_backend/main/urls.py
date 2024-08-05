@@ -8,7 +8,8 @@ urlpatterns = [
     path('getPosts/', views.get_posts, name='getPosts'),
     path('newStory/', views.new_story, name='newStory'),
     path('getStories/', views.get_stories, name='getStories'),
-    path('getPostLikesCount/', views.get_post_likes_count, name='getPostLikesCount'),
+    path('getLCCount/', views.get_lc_count, name='getLCCount'),
     path('setPostLike/', views.set_post_like, name='setPostLike'),
-    
+    path('addPostComment/', views.add_post_comment, name='addPostComment'),
+    path('getPostComments/', views.get_post_comments, name='getPostComments'),
 ]
