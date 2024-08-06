@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_frontend/controllers/login_or_register.dart';
+import 'package:flutter_frontend/utils/login_or_register.dart';
 import 'package:flutter_frontend/services/authentification/auth_service.dart';
 import 'package:provider/provider.dart';
 

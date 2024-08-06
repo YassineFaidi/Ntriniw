@@ -265,3 +265,93 @@ def get_post_comments(request):
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)})
     return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+
+def get_users(request):
+    if request.method == 'GET':
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT id, username, email, profileImg FROM users ORDER BY username DESC")
+                users = cursor.fetchall()
+                users_list = []
+                for user in users:
+                    users_list.append({"uid": str(user[0]), "username": str(user[1]), "email": str(user[2]),"profileImg": base64.b64encode(user[3]).decode() if user[3] else None})
+            return JsonResponse({"success": True, "users": users_list})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)}, status=500)
+    return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+
+@csrf_exempt
+def send_msg(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            senderId = data.get('senderId')
+            receiverId = data.get('receiverId')
+            content = data.get('content')
+            
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT id FROM users WHERE id = %s", [senderId])
+                if not cursor.fetchone():
+                    return JsonResponse({'success': False, 'error': 'Uknown user'})
+            try :
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "INSERT INTO messages (sender_id, receiver_id, content) VALUES (%s, %s, %s)",
+                        [senderId, receiverId, content]
+                    )
+                    return JsonResponse({'success': True, 'message': 'Messade sent successfully'})
+            except Exception as e:
+                return JsonResponse({'success': False, 'error': 'Failed to send message'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+
+@csrf_exempt
+def get_msgs(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        senderId = data.get('senderId')
+        receiverId = data.get('receiverId')
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT sender_id, receiver_id, content, created_at FROM messages WHERE (sender_id = %s and receiver_id = %s) or (sender_id = %s and receiver_id = %s) ORDER BY created_at DESC", [senderId, receiverId, receiverId, senderId])
+                messages = cursor.fetchall()
+                messages_list = []
+                for message in messages:
+                    messages_list.append({"sender_id": str(message[0]), "receiver_id": str(message[1]), "content": str(message[2]),"created_at": str(message[3])})
+            return JsonResponse({"success": True, "messages": messages_list})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+    return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+
+@csrf_exempt
+def get_latest(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        senderId = data.get('senderId')
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT DISTINCT sender_id, receiver_id FROM messages WHERE (sender_id = %s or receiver_id = %s) ORDER BY created_at DESC", [senderId, senderId])
+                latests = cursor.fetchall()
+                latests_list = []
+                help_me = []
+                for latest in latests:
+                    if senderId == str(latest[0]) and latest[1] not in help_me:
+                        help_me.append(latest[1])
+                        cursor.execute("SELECT username, profileImg from users  WHERE id = %s", [latest[1]])
+                        user = cursor.fetchone()
+                        cursor.execute("SELECT content, created_at FROM messages WHERE (sender_id = %s and receiver_id = %s) or (sender_id = %s and receiver_id = %s) ORDER BY created_at DESC LIMIT 1", [latest[1], latest[0], latest[0], latest[1]])
+                        msg = cursor.fetchone()
+                        latests_list.append({"receiver_username": str(user[0]), "receiver_img": base64.b64encode(user[1]).decode() if user[1] else None, "last_msg": str(msg[0]),"created_at": str(msg[1]), "receiver_id": str(latest[1])})
+                    elif senderId != str(latest[0]) and latest[0] not in help_me:
+                        help_me.append(latest[0])
+                        cursor.execute("SELECT username, profileImg from users  WHERE id = %s", [latest[0]])
+                        user = cursor.fetchone()
+                        cursor.execute("SELECT content, created_at FROM messages WHERE (sender_id = %s and receiver_id = %s) or (sender_id = %s and receiver_id = %s) ORDER BY created_at DESC LIMIT 1", [latest[1], latest[0], latest[0], latest[1]])
+                        msg = cursor.fetchone()
+                        latests_list.append({"receiver_username": str(user[0]), "receiver_img": base64.b64encode(user[1]).decode() if user[1] else None, "last_msg": str(msg[0]),"created_at": str(msg[1]), "receiver_id": str(latest[0])})
+            return JsonResponse({"success": True, "latests": latests_list})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+    return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)

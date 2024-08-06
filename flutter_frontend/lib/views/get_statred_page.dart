@@ -1,4 +1,4 @@
-import 'package:flutter_frontend/controllers/login_or_register.dart';
+import 'package:flutter_frontend/utils/login_or_register.dart';
 import 'package:flutter_frontend/utils/shared_prefs_helper.dart';
 import 'package:flutter_frontend/components/my_button.dart';
 import 'package:flutter_frontend/constants/app_img.dart';

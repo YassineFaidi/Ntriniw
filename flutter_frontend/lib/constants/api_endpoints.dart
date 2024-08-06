@@ -1,6 +1,6 @@
 // import 'package:flutter/material.dart';
 
-const serverIp = '192.168.231.57';
+const serverIp = '192.168.140.57';
 const serverPort = '1234';
 
 const signInEndpoint = 'http://${serverIp}:${serverPort}/signIn/';
@@ -19,3 +19,8 @@ const setPostLikeEndpoint = 'http://${serverIp}:${serverPort}/setPostLike/';
 const addPostCommentEndpoint = 'http://${serverIp}:${serverPort}/addPostComment/';
 const getPostCommentsEndpoint = 'http://${serverIp}:${serverPort}/getPostComments/';
 
+const getUsersEndpoint = 'http://${serverIp}:${serverPort}/getUsers/';
+
+const sendMsgEndpoint = 'http://${serverIp}:${serverPort}/sendMsg/';
+const getMsgsEndpoint = 'http://${serverIp}:${serverPort}/getMsgs/';
+const getLatestEndpoint = 'http://${serverIp}:${serverPort}/getLatest/';

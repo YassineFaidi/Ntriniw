@@ -12,4 +12,8 @@ urlpatterns = [
     path('setPostLike/', views.set_post_like, name='setPostLike'),
     path('addPostComment/', views.add_post_comment, name='addPostComment'),
     path('getPostComments/', views.get_post_comments, name='getPostComments'),
+    path('getUsers/', views.get_users, name='getUsers'),
+    path('sendMsg/', views.send_msg, name='sendMsg'),
+    path('getMsgs/', views.get_msgs, name='getMsgs'),
+    path('getLatest/', views.get_latest, name='getLatest'),
 ]
