@@ -16,4 +16,8 @@ urlpatterns = [
     path('sendMsg/', views.send_msg, name='sendMsg'),
     path('getMsgs/', views.get_msgs, name='getMsgs'),
     path('getLatest/', views.get_latest, name='getLatest'),
+    path('getPostsById/', views.get_posts_by_id, name='getPostsById'),
+    path('deletePost/', views.delete_post, name='deletePost'),
+    path('getUserInfo/', views.get_user_info, name='getUserInfo'),
 ]
+

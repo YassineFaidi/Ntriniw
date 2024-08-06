@@ -355,3 +355,60 @@ def get_latest(request):
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)})
     return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+
+@csrf_exempt
+def get_posts_by_id(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        userID = data.get('userID')
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT created_at, user_id, content, image, id FROM posts WHERE user_id = %s ORDER BY created_at DESC", [userID])
+                posts = cursor.fetchall()
+                posts_list = []
+                for post in posts:
+                    cursor.execute("SELECT username, profileImg from users  WHERE id = %s", [post[1]])
+                    user = cursor.fetchone()
+                    posts_list.append({"username": str(user[0]), "userImage": base64.b64encode(user[1]).decode() if user[1] else None, "created_at": str(post[0]),"content": str(post[2]), "image": base64.b64encode(post[3]).decode() if post[3] else None, "postId": str(post[4])})
+            return JsonResponse({"success": True, "posts": posts_list})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)}, status=500)
+    return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+
+@csrf_exempt
+def delete_post(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            postId = data.get('postId')
+
+            try :
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "DELETE FROM posts WHERE id = %s", [postId])
+                    return JsonResponse({'success': True, 'message': 'Post deleted successfully'})
+            except Exception as e:
+                return JsonResponse({'success': False, 'error': 'Post creation failed'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+
+@csrf_exempt
+def get_user_info(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            postId = data.get('postId')
+
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT user_id FROM posts WHERE id = %s", [postId])
+                userid = cursor.fetchone()[0]
+                cursor.execute("SELECT id, username, email, profileImg FROM users WHERE id = %s", [userid])
+                user = cursor.fetchone()
+                user_data = [user[0],user[1],user[2],base64.b64encode(user[3]).decode() if user[3] else None]
+                return JsonResponse({'success': True, 'user': user_data})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)

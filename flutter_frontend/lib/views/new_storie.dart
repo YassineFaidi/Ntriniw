@@ -49,6 +49,8 @@ class _NewStoryState extends State<NewStory> {
       );
       // ignore: use_build_context_synchronously
       Navigator.pop(context);
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context);
     } catch (e) {
       if (e is Exception) {
         var message = e.toString();

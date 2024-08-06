@@ -3,6 +3,7 @@ import 'package:flutter_frontend/components/my_app_bar.dart';
 import 'package:flutter_frontend/components/my_button.dart';
 import 'package:flutter_frontend/utils/my_helper.dart';
 import 'package:flutter_frontend/services/authentification/auth_service.dart';
+import 'package:flutter_frontend/views/my_shared_posts.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -13,10 +14,13 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  late int actualUid;
+
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
     final user = authService.userCredential;
+    actualUid = user!.uid;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -29,7 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               ...[
                 CircleAvatar(
-                  backgroundImage: MyHelper.getuserImg(user!.profileImg),
+                  backgroundImage: MyHelper.getuserImg(user.profileImg),
                   radius: 50.0,
                 ),
                 const SizedBox(height: 20),
@@ -38,6 +42,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 Text('Email: ${user.email}'),
               ],
               const SizedBox(height: 20),
+              MyButton(onTap: myShaerdPosts, text: "My posts"),
+              const SizedBox(height: 10),
               MyButton(onTap: signOut, text: "Sign Out"),
             ],
           ),
@@ -50,4 +56,17 @@ class _ProfilePageState extends State<ProfilePage> {
     final authService = Provider.of<AuthService>(context, listen: false);
     authService.signOut();
   }
+
+  void myShaerdPosts() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MySharedPosts(
+          userID: actualUid,
+        ),
+      ),
+    );
+  }
+
+  void savedPosts() {}
 }

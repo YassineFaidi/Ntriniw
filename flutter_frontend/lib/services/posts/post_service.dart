@@ -186,4 +186,92 @@ class PostService {
     }
   }
 
+  static Future<List<Post>> fetchPostsById(int userID) async {
+    try {
+      final response = await http.post(
+        Uri.parse(getPostsByIdEndpoint),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'userID': userID.toString(),
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+
+        if (responseBody['success'] == true &&
+            responseBody.containsKey('posts')) {
+          final List<dynamic> postsData = responseBody['posts'];
+          return postsData.map((data) {
+            return Post(
+              username: data['username'],
+              content: data['content'],
+              postImage: data['image'],
+              userImage: data['userImage'] ?? '',
+              postTime: data['created_at'],
+              postId: data['postId'],
+            );
+          }).toList();
+        } else {
+          throw Exception('Failed to load posts');
+        }
+      } else {
+        throw Exception('Failed to load posts');
+      }
+    } catch (e) {
+      return [];
+    }
+  }
+
+  static Future<void> deletePost(String postId) async {
+    final response = await http.post(
+      Uri.parse(deletePostEndpoint),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'postId': postId,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete post');
+    }
+
+    final responseBody = jsonDecode(response.body);
+    if (!responseBody['success']) {
+      throw Exception('Failed to delete post');
+    }
+  }
+
+  static Future<List<dynamic>> getUserInfo(String postId) async {
+    try {
+      final response = await http.post(
+        Uri.parse(getUserInfoEndpoint),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'postId': postId,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        if (responseBody['success'] == true &&
+            responseBody.containsKey('user')) {
+          final List<dynamic> userInfo = responseBody['user'];
+          return userInfo;
+        } else {
+          throw Exception('Failed to load user info');
+        }
+      } else {
+        throw Exception('Failed to load user info');
+      }
+    } catch (e) {
+      return [];
+    }
+  }
 }

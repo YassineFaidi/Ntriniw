@@ -32,6 +32,11 @@ class _LatestChatPageState extends State<LatestChatPage> {
     futureLatests = fetchLatests();
   }
 
+  Future<void> _refresh() async {
+    futureLatests = fetchLatests();
+    setState(() {});
+  }
+
   Future<List<LatestChatItem>> fetchLatests() async {
     latests = await ChatService.getLatest(actualUid);
     return latests!;
@@ -158,32 +163,36 @@ class _LatestChatPageState extends State<LatestChatPage> {
         title: const Text('Chats'),
       ),
       body: SafeArea(
-        child: FutureBuilder<List<LatestChatItem>>(
-            future: futureLatests,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center();
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Center();
-              } else {
-                final latests = snapshot.data!;
-                return ListView.builder(
-                  itemCount: latests.length,
-                  itemBuilder: (context, index) {
-                    final latestInfo = latests[index];
-                    return LatestChatItem(
+        child: RefreshIndicator(
+          color: myPrimaryColor,
+          onRefresh: _refresh,
+          child: FutureBuilder<List<LatestChatItem>>(
+              future: futureLatests,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center();
+                } else {
+                  final latests = snapshot.data!;
+                  return ListView.builder(
+                    itemCount: latests.length,
+                    itemBuilder: (context, index) {
+                      final latestInfo = latests[index];
+                      return LatestChatItem(
                         username: latestInfo.username,
                         userImg: latestInfo.userImg,
                         lastMessage: latestInfo.lastMessage,
                         timestamp: latestInfo.timestamp,
                         userId: latestInfo.userId,
-                        );
-                  },
-                );
-              }
-            }),
+                      );
+                    },
+                  );
+                }
+              }),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: myPrimaryColor,

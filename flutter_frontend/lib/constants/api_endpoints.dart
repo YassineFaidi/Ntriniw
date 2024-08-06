@@ -24,3 +24,8 @@ const getUsersEndpoint = 'http://${serverIp}:${serverPort}/getUsers/';
 const sendMsgEndpoint = 'http://${serverIp}:${serverPort}/sendMsg/';
 const getMsgsEndpoint = 'http://${serverIp}:${serverPort}/getMsgs/';
 const getLatestEndpoint = 'http://${serverIp}:${serverPort}/getLatest/';
+
+const getPostsByIdEndpoint = 'http://${serverIp}:${serverPort}/getPostsById/';
+const deletePostEndpoint = 'http://${serverIp}:${serverPort}/deletePost/';
+
+const getUserInfoEndpoint = 'http://${serverIp}:${serverPort}/getUserInfo/';

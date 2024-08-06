@@ -44,8 +44,19 @@ class Post {
     await PostService.addComment(postId, userId, comment);
   }
 
-  static Future<List<Comment>> getPostComments(
-      String postId) async {
+  static Future<List<Comment>> getPostComments(String postId) async {
     return await PostService.getPostComments(postId);
+  }
+
+  static Future<List<Post>> fetchPostsById(int userID) async {
+    return await PostService.fetchPostsById(userID);
+  }
+
+  static Future<void> deletePost(String postId) async {
+    return await PostService.deletePost(postId);
+  }
+
+  static Future<List<dynamic>>getUserInfo(String postId) async {
+    return await PostService.getUserInfo(postId);
   }
 }
