@@ -3,7 +3,7 @@
 <br />
 <div align="center">
   <a href=".">
-    <img src="flutter_frontend/assets/images/logo-removebg.png" alt="Logo" width="120" height="120">
+    <img src="flutter_frontend/assets/images/logo-removebg.png" alt="Logo" width="220" height="220">
   </a>
 
   <h3 align="center">Ntriniw</h3>
