@@ -1,6 +1,6 @@
 // import 'package:flutter/material.dart';
 
-const serverIp = '192.168.140.57';
+const serverIp = '192.168.159.57';
 const serverPort = '1234';
 
 const signInEndpoint = 'http://${serverIp}:${serverPort}/signIn/';
