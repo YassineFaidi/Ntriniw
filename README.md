@@ -1,5 +1,4 @@
 <a name="readme-top"></a>
-Ntriniw is a social mobile app for the calisthenics community with Instagram-like features.
 
 ## About The Project
 
