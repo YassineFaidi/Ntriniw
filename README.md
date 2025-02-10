@@ -2,9 +2,6 @@
 
 <br />
 <div align="center">
-  <a href=".">
-    <img src="flutter_frontend/assets/images/run.png" alt="Logo" width="120" height="120">
-  </a>
 
   <h3 align="center">Ntriniw</h3>
 
@@ -28,7 +25,7 @@
 ## About The Project
 
 <div align="center">
-  <img src="flutter_frontend/assets/images/home.jpg" alt="Project Screenshot 1" width="300" hspace="30">
+  <img src="flutter_frontend/assets/images/home.jpg" alt="Project Screenshot 1" width="300" hspace="70">
   <img src="flutter_frontend/assets/images/story.jpg" alt="Project Screenshot 2" width="300">
 </div>
 
