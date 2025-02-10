@@ -3,7 +3,7 @@
 <br />
 <div align="center">
   <a href=".">
-    <img src="flutter_frontend/assets/images/run.png" alt="Logo" width="150" height="150">
+    <img src="flutter_frontend/assets/images/run.png" alt="Logo" width="120" height="120">
   </a>
 
   <h3 align="center">Ntriniw</h3>
@@ -35,7 +35,9 @@
 
 ## About The Project
 
-![Product Screenshot][product-screenshot]
+<div align="center">
+  <img src="flutter_frontend/assets/images/home.jpg" alt="Product Screenshot" width="300">
+</div>
 
 Ntriniw is a social mobile app dedicated to the calisthenics community, offering Instagram-like features tailored for fitness enthusiasts. It allows users to share workouts, engage with posts, and connect with other athletes.
 
@@ -45,6 +47,14 @@ Key features include:
 * **Real-time chat** – Connect and interact with other community members.
 
 This project aims to foster a strong online calisthenics community by providing a platform for sharing progress, motivation, and knowledge.
+
+### Demo Video
+
+<div align="center">
+  <a href="demo_video_link_here">
+    <img src="flutter_frontend/assets/images/demo_thumbnail.jpg" alt="Demo Video" width="300">
+  </a>
+</div>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -79,6 +89,3 @@ Yassine Faidi: [@my_linkedin](https://www.linkedin.com/in/yassine-faidi-85367124
 Project Link: [https://github.com/YassineFaidi/Ntriniw.git](https://github.com/YassineFaidi/Ntriniw.git)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-[product-screenshot]: flutter_frontend/assets/images/home.jpg
-
