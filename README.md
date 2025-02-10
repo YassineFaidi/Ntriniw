@@ -36,7 +36,8 @@
 ## About The Project
 
 <div align="center">
-  <img src="flutter_frontend/assets/images/home.jpg" alt="Product Screenshot" width="300">
+  <img src="flutter_frontend/assets/images/home.jpg" alt="Product Screenshot 1" width="300">
+  <img src="flutter_frontend/assets/images/story.jpg" alt="Product Screenshot 2" width="300">
 </div>
 
 Ntriniw is a social mobile app dedicated to the calisthenics community, offering Instagram-like features tailored for fitness enthusiasts. It allows users to share workouts, engage with posts, and connect with other athletes.
@@ -47,16 +48,6 @@ Key features include:
 * **Real-time chat** – Connect and interact with other community members.
 
 This project aims to foster a strong online calisthenics community by providing a platform for sharing progress, motivation, and knowledge.
-
-### Demo Video
-
-<div align="center">
-  <a href="demo_video_link_here">
-    <img src="flutter_frontend/assets/images/demo_thumbnail.jpg" alt="Demo Video" width="300">
-  </a>
-</div>
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Built With
 
