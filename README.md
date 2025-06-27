@@ -1,7 +1,7 @@
 <div align="center">
   <img src="flutter_frontend/assets/images/logo-removebg.png" alt="Ntriniw Logo" width="200" height="200">
   
-  # 🏋️‍♂️ Ntriniw
+  # Ntriniw
   
   **The Ultimate Social Platform for Calisthenics Enthusiasts**
   
