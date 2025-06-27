@@ -38,9 +38,9 @@
 | 📸 **Post Sharing** | Upload high-quality images and videos of your calisthenics progress |
 | ❤️ **Like & Comment** | Engage with the community through interactive features |
 | 💬 **Real-time Chat** | Connect directly with other athletes and share tips |
-| 👥 **Follow System** | Stay updated with your favorite athletes' progress |
-| 📊 **Progress Tracking** | Monitor your calisthenics journey over time |
-| 🏆 **Achievement System** | Celebrate milestones and accomplishments |
+| 👥 **User Profiles** | View and manage user profiles with custom images |
+| 📊 **Story System** | Share temporary 24-hour stories like Instagram |
+| 🏆 **Social Interaction** | Follow, like, comment, and message other users |
 
 ### 🎯 Mission
 
@@ -51,22 +51,30 @@ Our mission is to create the world's most vibrant and supportive online communit
 ## 🛠️ Tech Stack
 
 ### Frontend
-- **Flutter** - Cross-platform mobile development framework
+- **Flutter** (3.4.3+) - Cross-platform mobile development framework
 - **Dart** - Programming language for Flutter
 - **Provider** - State management solution
+- **Shared Preferences** - Local data storage
+- **Image Picker** - Image selection and capture
+- **HTTP** - API communication
+- **Cached Network Image** - Efficient image loading and caching
+- **Story View** - Story display functionality
+- **Google Fonts** - Custom typography
 
 ### Backend
-- **Django** - High-level Python web framework
+- **Django** (4.2+) - High-level Python web framework
 - **Django REST Framework** - Powerful toolkit for building Web APIs
-- **Python** - Backend programming language
-
-### Database
+- **Python** (3.8+) - Backend programming language
 - **MySQL** - Reliable and scalable relational database
+- **bcrypt** - Password hashing and security
 
-### Additional Technologies
-- **WebSocket** - Real-time communication for chat features
-- **Firebase** - Push notifications and analytics
-- **AWS S3** - Cloud storage for media files
+### Database Schema
+- **Users** - User authentication and profiles
+- **Posts** - User-generated content with images
+- **Stories** - 24-hour temporary content
+- **Likes** - Post interaction tracking
+- **Comments** - Post discussion system
+- **Messages** - Direct messaging between users
 
 ---
 
@@ -74,10 +82,11 @@ Our mission is to create the world's most vibrant and supportive online communit
 
 ### Prerequisites
 
-- Flutter SDK (2.0 or higher)
-- Python 3.8+
-- MySQL 8.0+
-- Android Studio / VS Code
+- **Flutter SDK** (3.4.3 or higher)
+- **Python** (3.8 or higher)
+- **MySQL** (8.0 or higher)
+- **Android Studio** / **VS Code** with Flutter extensions
+- **Git** for version control
 
 ### Installation
 
@@ -87,33 +96,95 @@ Our mission is to create the world's most vibrant and supportive online communit
    cd Ntriniw
    ```
 
-2. **Backend Setup**
+2. **Database Setup**
    ```bash
-   cd backend
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   pip install -r requirements.txt
-   python manage.py migrate
-   python manage.py runserver
+   # Start MySQL service
+   sudo service mysql start  # Linux/Mac
+   # or
+   net start mysql  # Windows
+   
+   # Access MySQL and run the database script
+   mysql -u root -p
+   source django_backend/main/databasesQuery.sql
    ```
 
-3. **Frontend Setup**
+3. **Backend Setup**
+   ```bash
+   cd django_backend
+   
+   # Create virtual environment
+   python -m venv venv
+   
+   # Activate virtual environment
+   # On Windows:
+   venv\Scripts\activate
+   # On macOS/Linux:
+   source venv/bin/activate
+   
+   # Install dependencies
+   pip install django
+   pip install mysqlclient
+   pip install bcrypt
+   
+   # Run migrations
+   python manage.py migrate
+   
+   # Start the server (default port 8000)
+   python manage.py runserver 0.0.0.0:1234
+   ```
+
+4. **Frontend Setup**
    ```bash
    cd flutter_frontend
+   
+   # Get dependencies
    flutter pub get
+   
+   # Update API endpoints (if needed)
+   # Edit lib/constants/api_endpoints.dart with your server IP
+   
+   # Run the app
    flutter run
    ```
 
+### Configuration
+
+#### Backend Configuration
+Update `django_backend/django_backend/settings.py` with your database credentials:
+
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'Ntriniw_v1',
+        'USER': 'your_username',
+        'PASSWORD': 'your_password',
+        'HOST': 'localhost',
+        'PORT': '3306', 
+    }
+}
+```
+
+#### Frontend Configuration
+Update `flutter_frontend/lib/constants/api_endpoints.dart` with your server IP:
+
+```dart
+const serverIp = 'your_server_ip';  // Change this to your server IP
+const serverPort = '1234';
+```
+
 ### Environment Variables
 
-Create a `.env` file in the backend directory:
+Create a `.env` file in the `django_backend` directory:
 
 ```env
 DEBUG=True
-SECRET_KEY=your-secret-key
-DATABASE_URL=mysql://user:password@localhost/ntriniw
-AWS_ACCESS_KEY_ID=your-aws-key
-AWS_SECRET_ACCESS_KEY=your-aws-secret
+SECRET_KEY=your-secret-key-here
+DATABASE_NAME=Ntriniw_v1
+DATABASE_USER=your_username
+DATABASE_PASSWORD=your_password
+DATABASE_HOST=localhost
+DATABASE_PORT=3306
 ```
 
 ---
@@ -121,16 +192,204 @@ AWS_SECRET_ACCESS_KEY=your-aws-secret
 ## 📱 Usage Guide
 
 ### For Users
-1. **Sign Up** - Create your athlete profile
-2. **Upload Content** - Share your calisthenics progress with photos and videos
-3. **Engage** - Like, comment, and interact with the community
-4. **Connect** - Follow other athletes and build your network
-5. **Chat** - Use real-time messaging to connect with fellow enthusiasts
+1. **Sign Up** - Create your athlete profile with email, username, and optional profile image
+2. **Sign In** - Access your account with email and password
+3. **Upload Content** - Share your calisthenics progress with photos and text
+4. **Engage** - Like, comment, and interact with the community
+5. **Share Stories** - Post temporary 24-hour stories
+6. **Chat** - Send direct messages to other users
+7. **View Profiles** - Explore other athletes' profiles and posts
 
 ### For Developers
-- Check out our [Contributing Guidelines](CONTRIBUTING.md)
-- Review the [API Documentation](docs/API.md)
+- Check out our [Contributing Guidelines](#-contributing)
+- Review the [API Documentation](#-api-documentation)
 - Join our [Discord Community](https://discord.gg/ntriniw)
+
+---
+
+## 🔌 API Documentation
+
+### Authentication Endpoints
+
+#### Sign Up
+```http
+POST /signUp/
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "password123",
+  "username": "username",
+  "image": "base64_encoded_image" // optional
+}
+```
+
+#### Sign In
+```http
+POST /signIn/
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+
+### Posts Endpoints
+
+#### Create Post
+```http
+POST /newPost/
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "content": "Post content",
+  "postImg": "base64_encoded_image" // optional
+}
+```
+
+#### Get All Posts
+```http
+GET /getPosts/
+```
+
+#### Get User Posts
+```http
+POST /getPostsById/
+Content-Type: application/json
+
+{
+  "userId": 1
+}
+```
+
+#### Delete Post
+```http
+POST /deletePost/
+Content-Type: application/json
+
+{
+  "postId": 1,
+  "userId": 1
+}
+```
+
+### Stories Endpoints
+
+#### Create Story
+```http
+POST /newStory/
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "storyImg": "base64_encoded_image"
+}
+```
+
+#### Get Stories
+```http
+GET /getStories/
+```
+
+### Interaction Endpoints
+
+#### Like/Unlike Post
+```http
+POST /setPostLike/
+Content-Type: application/json
+
+{
+  "postId": 1,
+  "userId": 1
+}
+```
+
+#### Get Like/Comment Count
+```http
+POST /getLCCount/
+Content-Type: application/json
+
+{
+  "postId": 1,
+  "actualUserId": 1
+}
+```
+
+#### Add Comment
+```http
+POST /addPostComment/
+Content-Type: application/json
+
+{
+  "postId": 1,
+  "userId": 1,
+  "comment": "Great workout!"
+}
+```
+
+#### Get Comments
+```http
+POST /getPostComments/
+Content-Type: application/json
+
+{
+  "postId": 1
+}
+```
+
+### Messaging Endpoints
+
+#### Send Message
+```http
+POST /sendMsg/
+Content-Type: application/json
+
+{
+  "senderId": 1,
+  "receiverId": 2,
+  "content": "Hello!"
+}
+```
+
+#### Get Messages
+```http
+POST /getMsgs/
+Content-Type: application/json
+
+{
+  "senderId": 1,
+  "receiverId": 2
+}
+```
+
+#### Get Latest Chats
+```http
+POST /getLatest/
+Content-Type: application/json
+
+{
+  "userId": 1
+}
+```
+
+### User Endpoints
+
+#### Get All Users
+```http
+GET /getUsers/
+```
+
+#### Get User Info
+```http
+POST /getUserInfo/
+Content-Type: application/json
+
+{
+  "userId": 1
+}
+```
 
 ---
 
@@ -138,40 +397,66 @@ AWS_SECRET_ACCESS_KEY=your-aws-secret
 
 We welcome contributions from the community! Here's how you can help:
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. **Fork the repository**
+2. **Create a feature branch** (`git checkout -b feature/AmazingFeature`)
+3. **Commit your changes** (`git commit -m 'Add some AmazingFeature'`)
+4. **Push to the branch** (`git push origin feature/AmazingFeature`)
+5. **Open a Pull Request**
 
 ### Development Guidelines
 - Follow Flutter and Django best practices
-- Write comprehensive tests
+- Write comprehensive tests for new features
 - Update documentation as needed
 - Ensure code quality with linting
+- Test on both Android and iOS platforms
+- Follow the existing code style and architecture
+
+### Code Style
+- Use meaningful variable and function names
+- Add comments for complex logic
+- Follow PEP 8 for Python code
+- Use Flutter's recommended coding standards
+- Keep functions small and focused
 
 ---
 
 ## 📊 Project Status
 
-- [x] User authentication system
-- [x] Post creation and sharing
+### ✅ Completed Features
+- [x] User authentication system (sign up/sign in)
+- [x] Post creation and sharing with images
 - [x] Like and comment functionality
-- [x] Real-time chat implementation
-- [x] Follow/unfollow system
+- [x] Story creation and viewing (24-hour expiry)
+- [x] Direct messaging between users
+- [x] User profile management
+- [x] Real-time post interactions
+- [x] Image upload and storage
+- [x] Cross-platform mobile app (Android/iOS)
+
+### 🚧 In Progress
 - [ ] Push notifications
+- [ ] Video upload support
+- [ ] Advanced search functionality
+- [ ] User following system
+
+### 📋 Planned Features
 - [ ] Advanced analytics dashboard
 - [ ] Video compression and optimization
 - [ ] Offline mode support
+- [ ] Live streaming capabilities
+- [ ] AI-powered workout recommendations
+- [ ] Integration with fitness trackers
+- [ ] Advanced community features and challenges
 
 ---
 
-## 📈 Roadmap
+## 🛡️ Security
 
-- **Q1 2024**: Enhanced video features and live streaming
-- **Q2 2024**: AI-powered workout recommendations
-- **Q3 2024**: Integration with fitness trackers
-- **Q4 2024**: Advanced community features and challenges
+- Passwords are hashed using bcrypt
+- CSRF protection enabled
+- Input validation on all endpoints
+- SQL injection prevention through parameterized queries
+- Secure file upload handling
 
 ---
 
@@ -200,6 +485,17 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE.txt) 
 - The amazing calisthenics community for inspiration
 - Flutter and Django communities for excellent documentation
 - All contributors and beta testers
+- Open source contributors whose libraries made this project possible
+
+---
+
+## 📞 Support
+
+If you encounter any issues or have questions:
+
+- **Create an issue** on GitHub
+- **Email us** at yassinefaidi133@gmail.com
+- **Join our Discord** community
 
 ---
 
