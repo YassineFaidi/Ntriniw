@@ -191,7 +191,6 @@ DATABASE_PORT=3306
 
 ## 📱 Usage Guide
 
-### For Users
 1. **Sign Up** - Create your athlete profile with email, username, and optional profile image
 2. **Sign In** - Access your account with email and password
 3. **Upload Content** - Share your calisthenics progress with photos and text
@@ -199,12 +198,7 @@ DATABASE_PORT=3306
 5. **Share Stories** - Post temporary 24-hour stories
 6. **Chat** - Send direct messages to other users
 7. **View Profiles** - Explore other athletes' profiles and posts
-
-### For Developers
-- Check out our [Contributing Guidelines](#-contributing)
-- Review the [API Documentation](#-api-documentation)
-- Join our [Discord Community](https://discord.gg/ntriniw)
-
+   
 ---
 
 ## 🤝 Contributing
@@ -276,7 +270,7 @@ We welcome contributions from the community! Here's how you can help:
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE.txt) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
@@ -287,7 +281,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE.txt) 
   **Yassine Faidi** - *Lead Developer*
   
   [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/yassine-faidi-853671247/)
-  [![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:yassinefaidi133@gmail.com)
+  [![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:yassine.faidi.117@gmail.com)
   [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/YassineFaidi)
   
 </div>
@@ -308,7 +302,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE.txt) 
 If you encounter any issues or have questions:
 
 - **Create an issue** on GitHub
-- **Email us** at yassinefaidi133@gmail.com
+- **Email us** at yassine.faidi.1173@gmail.com
 - **Join our Discord** community
 
 ---
